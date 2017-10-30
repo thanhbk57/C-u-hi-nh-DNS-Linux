@@ -1,0 +1,136 @@
+. DNS là gì ?
+
+DNS ( Domain Name System) là h? th?ng cho phép ánh x? t? d?a têm mi?n sang d?a ch? IP. Co s? d? li?u du?c cài d?t phân tán theo ki?n trúc phân c?p name server.
+
+2. Phân c?p DNS server
+
+a. Root DNS Servers
+
+Ðu?c liên l?c b?i name server d?a phuong
+
+N?u không bi?t ánh x? tên mi?n mà Local DNS yêu c?u :
+
+Liên l?c name server có th?m quy?n
+L?y ánh x? tên
+Tr? l?i cho Local DNS
+######So d? 13 DNS Root server trên Internet (nam 2012):
+
+
+
+b. Top-level domain (TLD) servers
+
+Ch?u trách nhi?m cho các mi?n .com, .org, .net, .edu, ... và t?t c? các tên mi?n c?p qu?c gia nhu .vn, .uk, .jp.
+
+Các công ty s? ch?u trách nhi?m v? các tên mi?n này, ví d? nhu :
+
+Công ty Verisign Global Registry Services duy trì com TLD.
+Công ty Educause duy trì các edu TLD.
+Xem thêm t?i IANA-TLD
+
+c. Authoritative DNS servers
+
+M?i máy tính ph?i dang ký t?i m?t Authoritative name server. Thông thu?ng authoritative name server c?a m?t máy tính là name server trong mi?n ISP c?a máy tính dó.
+
+d. Local Name Server
+
+Không nh?t thi?t ph?i thu?c h? th?ng phân c?p
+
+M?i ISP có m?t Local Name Server (default name server)
+
+Khi host t?o truy v?n DNS, truy v?n du?c g?i d?n Local Name Server d?u tiên, nó ho?t d?ng nhu m?t proxy d? chuy?n truy v?n d?n h? th?ng phân c?p
+
+3. Nguyên t?c ho?t d?ng
+
+a. Truy v?n d? quy (recursive query)
+
+
+
+Khi máy tính hay name server A g?i thông di?p yêu c?u t?i name server B, name server B thay m?t A nh?n thông di?p ch?a k?t qu? và sau dó g?i t?i A.
+
+b. Truy v?n tuong tác (iteractive)
+
+
+
+Khi name server A g?i truy v?n tuong tác t?i name server B, n?u name server không có ánh x? du?c yêu c?u, nó s? g?i cho A thông di?p tr? l?i ch?a d?a ch? IP c?a name server k? ti?p trên chu?i, ch?ng h?n name server C.
+
+Sau dó name server A tr?c ti?p g?i thông di?p yêu c?u t?i name server C.
+
+4. Các b?n ghi DNS
+
+DNS t? ch?c theo mô hình CSDL phân tán luu tr? các b?n ghi tài nguyên Resource Records (RR)
+
+Ð?nh d?ng RR : (name, value, type, ttl)
+
+Type	Name	Value
+A	hostname	IP address
+CNAME	alias hostname	canonical hostname
+NS	domain	name of an authoritative DNS
+MX	canonical name of mail server	alias hostname
+5. Ð?nh d?ng gói tin DNS
+
+
+
+Header section (12 bytes)
+
+
+
+identification : s? th? t? (16 bit), n?i gi?a repply nh?n du?c và queries g?i di.
+flags :
+Field name	Size	Description
+QR	1 bit	0: query, 1: repply
+Opcode	4 bits	Xác d?nh lo?i thông di?p mang theo, 0: c? hi?u truy v?n, 1: truy v?n ngu?c, 2: tình tr?ng truy v?n
+AA	1 bit	1: repply có th?m quy?n
+TC	1 bit	1: thông di?p b? chia ra
+RD	1 bit	1: ti?p t?c truy v?n d? quy
+RA	1 bit	1: truy v?n du?c th?c thi trên server
+Z	3 bits	Ð?t b?ng 0 d? dành
+RCode	4 bits	0: l?i truy v?n, 1: l?i d?nh d?ng gói tin, 2:server tr?c tr?c, 3: l?i tên, 4: không th? thi hành, 5: server t? ch?i th?c thi
+number of questions : s? l?n truy v?n c?a m?t gói tin trong m?t v?n d?
+number of answer RRs : s? tài nguyên tham gia trong ph?n tr? l?i
+number of authority RRs : lu?ng tài nguyên du?c ghi l?i trong ph?n có th?m quy?n c?a gói tin
+number of additional RRs : lu?ng tài nguyên du?c ghi l?i trong ph?n thêm vào c?a gói tin
+Question section
+
+Ch?a thông tin v? truy v?n du?c t?o ra, bao g?m tên và ki?u tru?ng cho truy v?n.
+
+Answers section
+
+Ch?a các Resource Record cho câu tr? l?i truy v?n.
+
+Authority section
+
+Ch?a các b?n ghi c?a server có th?m quy?n.
+
+Additional section
+
+Các thông tin m? r?ng có th? du?c dùng.
+
+6. S? d?ng Wireshark b?t gói tin DNS
+
+B?t Wireshark d? b?t gói tin và truy c?p b?ng Browser vào m?t trang web nào dó.
+
+Stop b?t gói tin và l?c theo phuong th?c dns
+
+Gói tin truy v?n
+
+Thông di?p truy v?n g?i t? host 192.168.0.219 d?n Local Name Server 8.8.8.8 (Google)
+
+Question section ch?a name : assets-cdn.github.com, type : A, class : IN
+
+
+
+Gói tin tr? l?i
+
+Thông di?p tr? l?i mà Local Name Server 8.8.8.8 tr? v? cho host 192.168.0.219
+
+Có 2 câu tr? l?i du?c g?i v?, m?i câu tr? l?i bao g?m các thông tin v? name, type, class, TTL, data length và value.
+
+
+
+7. Tham kh?o
+
+Book : Computer Networking A Top-Down Approach 6th-edition - Kurose Ross.
+
+http://www.tcpipguide.com/free/t_DNSMessageHeaderandQuestionSectionFormat.htm
+
+https://vi.wikipedia.org/wiki/DNS
